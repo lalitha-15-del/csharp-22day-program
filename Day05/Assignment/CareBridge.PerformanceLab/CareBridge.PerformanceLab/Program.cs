@@ -19,7 +19,8 @@ while (true)
     Console.WriteLine("5. Explicit Loading Demo");
     Console.WriteLine("6. AsNoTracking Demo");
     Console.WriteLine("7. RevenueAtRiskDashboard");
-    Console.WriteLine("8. Exit");
+    Console.WriteLine("8.Patient Dashbaord");
+    Console.WriteLine("9. Exit");
 
     Console.WriteLine();
     Console.Write("Choose Option: ");
@@ -57,6 +58,11 @@ while (true)
             break;
 
         case "8":
+            CartesianExplosionDemo();
+            SplitQueryDemo();
+            break;
+
+        case "9":
             return;
 
         default:
@@ -484,4 +490,96 @@ static void RevenueAtRiskDashboard()
 
     Console.WriteLine($"Elapsed Time               : {stopwatch.ElapsedMilliseconds} ms");
 }
+static void CartesianExplosionDemo()
+{
+    using var db = new CareBridgeContext();
+
+    Console.WriteLine();
+    Console.WriteLine("SINGLE QUERY (Default Include)");
+    Console.WriteLine("------------------------------------------------");
+
+    Stopwatch stopwatch = Stopwatch.StartNew();
+
+    var patient = db.Patients
+        .AsNoTracking()
+        .Include(p => p.Encounters)
+            .ThenInclude(e => e.Diagnoses)
+        .Include(p => p.Encounters)
+            .ThenInclude(e => e.Claims)
+        .FirstOrDefault(p => p.Mrn == "MRN888888");
+
+    stopwatch.Stop();
+
+    if (patient == null)
+    {
+        Console.WriteLine("Patient not found.");
+        return;
+    }
+
+    int encounterCount = patient.Encounters.Count;
+
+    int diagnosisCount = patient.Encounters
+        .SelectMany(e => e.Diagnoses)
+        .Count();
+
+    int claimCount = patient.Encounters
+        .SelectMany(e => e.Claims)
+        .Count();
+
+    Console.WriteLine($"Encounters : {encounterCount}");
+    Console.WriteLine($"Diagnoses  : {diagnosisCount}");
+    Console.WriteLine($"Claims     : {claimCount}");
+
+    Console.WriteLine();
+    Console.WriteLine("Tracked Entities : " + db.ChangeTracker.Entries().Count());
+
+    Console.WriteLine($"Elapsed Time : {stopwatch.ElapsedMilliseconds} ms");
+}
+static void SplitQueryDemo()
+{
+    using var db = new CareBridgeContext();
+
+    Console.WriteLine();
+    Console.WriteLine("SPLIT QUERY (AsSplitQuery)");
+    Console.WriteLine("------------------------------------------------");
+
+    Stopwatch stopwatch = Stopwatch.StartNew();
+
+    var patient = db.Patients
+        .AsNoTracking()
+        .AsSplitQuery() // KEY FIX
+        .Include(p => p.Encounters)
+            .ThenInclude(e => e.Diagnoses)
+        .Include(p => p.Encounters)
+            .ThenInclude(e => e.Claims)
+        .FirstOrDefault(p => p.Mrn == "MRN888888");
+
+    stopwatch.Stop();
+
+    if (patient == null)
+    {
+        Console.WriteLine("Patient not found.");
+        return;
+    }
+
+    int encounterCount = patient.Encounters.Count;
+
+    int diagnosisCount = patient.Encounters
+        .SelectMany(e => e.Diagnoses)
+        .Count();
+
+    int claimCount = patient.Encounters
+        .SelectMany(e => e.Claims)
+        .Count();
+
+    Console.WriteLine($"Encounters : {encounterCount}");
+    Console.WriteLine($"Diagnoses  : {diagnosisCount}");
+    Console.WriteLine($"Claims     : {claimCount}");
+
+    Console.WriteLine();
+    Console.WriteLine("Tracked Entities : " + db.ChangeTracker.Entries().Count());
+
+    Console.WriteLine($"Elapsed Time : {stopwatch.ElapsedMilliseconds} ms");
+}
+
 

@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.37314.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EHRMvcDemo", "EHRMvcDemo\EHRMvcDemo.csproj", "{23C2DB12-E130-4856-AD8D-4E436D6935CC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{23C2DB12-E130-4856-AD8D-4E436D6935CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23C2DB12-E130-4856-AD8D-4E436D6935CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23C2DB12-E130-4856-AD8D-4E436D6935CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23C2DB12-E130-4856-AD8D-4E436D6935CC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3E699D5B-36AE-4467-B8D9-79E9CF23F342}
+	EndGlobalSection
+EndGlobal
